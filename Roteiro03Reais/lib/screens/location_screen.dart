@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+
 import '../services/location_service.dart';
-import '../utils/logger.dart';
 
 class LocationScreen extends StatelessWidget {
   final LocationService _locationService = LocationService();
@@ -9,9 +9,13 @@ class LocationScreen extends StatelessWidget {
     try {
       await _locationService.requestLocationPermission();
       final position = await _locationService.getCurrentLocation();
-      logError(context, 'Latitude: ${position.latitude}, Longitude: ${position.longitude}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Localização: ${position.latitude}, ${position.longitude}')),
+      );
     } catch (e) {
-      logError(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro: $e')),
+      );
     }
   }
 

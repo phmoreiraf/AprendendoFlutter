@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'services/theme_provider.dart';
-import 'screens/location_screen.dart';
+
 import 'screens/camera_screen.dart';
+import 'screens/location_screen.dart';
+import 'services/theme_provider.dart';
 
 void main() {
   runApp(
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.themeMode,

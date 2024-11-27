@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import '../services/camera_service.dart';
-import '../models/photo.dart';
-import '../utils/logger.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -11,7 +9,7 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   final CameraService _cameraService = CameraService();
-  List<Photo> _photos = [];
+  List<String> _photos = [];
 
   @override
   void initState() {
@@ -24,7 +22,9 @@ class _CameraScreenState extends State<CameraScreen> {
       await _cameraService.initialize();
       setState(() {});
     } catch (e) {
-      logError(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao inicializar câmera: $e')),
+      );
     }
   }
 
@@ -32,10 +32,12 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       final path = await _cameraService.takePicture();
       setState(() {
-        _photos.add(Photo(path, DateTime.now()));
+        _photos.add(path);
       });
     } catch (e) {
-      logError(context, e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao tirar foto: $e')),
+      );
     }
   }
 
@@ -51,7 +53,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 : GridView.builder(
                     itemCount: _photos.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-                    itemBuilder: (context, index) => Image.file(File(_photos[index].path)),
+                    itemBuilder: (context, index) => Image.file(File(_photos[index])),
                   ),
           ),
           FloatingActionButton(onPressed: _takePicture, child: Icon(Icons.camera)),
